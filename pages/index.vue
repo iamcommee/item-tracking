@@ -53,34 +53,25 @@
         :empty-text="messages.empty_list"
         style="width: 100%"
       >
-        <el-table-column
+        <el-table-column min-width="200"
         :label="capitalizeFirstLetter(this.itemType)"
          prop="name"
         >
         </el-table-column>
-        <el-table-column label="Status" align="center">
+        <el-table-column label="Availability" align="center">
           <template slot-scope="scope">
             <el-tooltip v-if="(scope.row.borrower)" class="item" effect="dark" :content="messages.tooltip.unavailable" placement="right">
-              <i class="el-icon-error" style="font-size:18px; color: #F56C6C;"></i>
+              <div>
+                <i class="el-icon-error" style="font-size:18px; color: #F56C6C;"></i>
+                <div>({{ scope.row.borrower }})</div>
+              </div>
             </el-tooltip>
             <el-tooltip v-else class="item" effect="dark" :content="messages.tooltip.available" placement="right">
               <i class="el-icon-success" style="font-size:18px; color: #67C23A;"></i>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="Borrower">
-          <template slot-scope="scope">
-            {{ scope.row.borrower }}
-          </template>
-        </el-table-column>
-        <el-table-column align="right">
-          <template slot="header" slot-scope="scope">
-            <el-input
-              v-model="search"
-              size="small"
-              placeholder="Type to search..."
-            />
-          </template>
+        <el-table-column align="center" label="Action">
           <template slot-scope="scope">
             <!-- Start Admin Permission -->
             <div v-if="$route.query.role === 'admin'">
@@ -362,7 +353,8 @@ export default {
 <style>
 
 .el-table .cell {
-  white-space: nowrap;
+  line-height: 1.4;
+  word-break: normal;
 }
 
 .el-form-item__label {
