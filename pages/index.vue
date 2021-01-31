@@ -1,6 +1,6 @@
 <template>
   <el-row type="flex" justify="center">
-    <el-col :span="18" :xs="23">
+    <el-col :span="18" :xs="22">
       <div style="margin-top: 60px;">
           <img width="50" height="50" src="~/assets/icon.png" style="margin-top:-6px; margin-left:5px;"/>
           <el-tooltip effect="dark" content="Device Tracking" placement="top">
@@ -116,17 +116,10 @@
         :visible.sync="showBorrowInformationDialog"
         @opened="setAutoFocus"
         >
-        <el-form :model="borrowInformationForm" @submit.native.prevent>
-          <el-form-item label="Item ID: " :label-width="formLabelWidth">
-            {{ borrowInformationForm.id }}
-          </el-form-item>
-          <el-form-item
-          label="Name: "
-          :label-width="formLabelWidth"
-          style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ borrowInformationForm.name }}
-          </el-form-item>
-          <el-form-item label="Borrower : " :label-width="formLabelWidth">
+        <el-form :model="borrowInformationForm"
+          label-position="top"
+          @submit.native.prevent>
+          <el-form-item label="Your name: " :label-width="formLabelWidth">
             <el-input
               ref="borrower"
               size="medium"
@@ -137,6 +130,9 @@
             </el-input>
           </el-form-item>
         </el-form>
+        <div slot="title" class="dialog-text">
+          Borrowing <em>{{ borrowInformationForm.name }}</em>.
+        </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="showBorrowInformationDialog = false">Cancel</el-button>
           <el-button
@@ -357,16 +353,26 @@ export default {
 
 .el-form-item__label {
   text-align: left;
+  line-height: 1;
 }
 
 @media only screen and (max-width: 768px) {
-  .el-form-item__label {
-    width: 25% !important;
-  }
-
   .borrow-information {
     width: 95%;
   }
+}
+
+.dialog-text {
+  font-size: 1.2rem;
+}
+
+.dialog-text em {
+  font-weight: bold;
+}
+
+.el-dialog__body {
+  padding-top: 20px;
+  padding-bottom: 0;
 }
 
 </style>
