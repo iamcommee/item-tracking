@@ -6,7 +6,7 @@
           <el-tooltip effect="dark" content="Device Tracking" placement="top">
             <el-button
             style="float: right;"
-            type="primary"
+            :type="this.itemType === 'devices' ? 'primary' : ''"
             icon="el-icon-mobile-phone"
             circle
             @click="getItemType('devices')"
@@ -16,7 +16,7 @@
           <el-tooltip effect="dark" content="Book Tracking" placement="top">
             <el-button
             style="float: right; margin-right:20px;"
-            type="primary"
+            :type="this.itemType === 'books' ? 'primary' : ''"
             icon="el-icon-notebook-1"
             circle
             @click="getItemType('books')"
