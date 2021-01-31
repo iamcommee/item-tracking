@@ -56,7 +56,7 @@
       >
         <el-table-column min-width="200"
         sortable
-        :label="capitalizeFirstLetter(this.itemType)"
+        :label="this.itemType | capitalize"
          prop="name"
         >
         </el-table-column>
@@ -117,11 +117,11 @@
         @opened="setAutoFocus"
         >
         <el-form :model="borrowInformationForm" @submit.native.prevent>
-          <el-form-item label="Item ID : " :label-width="formLabelWidth">
+          <el-form-item label="Item ID: " :label-width="formLabelWidth">
             {{ borrowInformationForm.id }}
           </el-form-item>
           <el-form-item
-          label="Item : "
+          label="Name: "
           :label-width="formLabelWidth"
           style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
             {{ borrowInformationForm.name }}
@@ -318,10 +318,6 @@ export default {
       this.borrowInformationForm.name = data.name;
       this.borrowInformationForm.type = '';
       this.showBorrowInformationDialog = true;
-    },
-
-    capitalizeFirstLetter(string) {
-      return string.replace(/^./, string[0].toUpperCase());
     },
 
     setAutoFocus() {
