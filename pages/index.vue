@@ -50,10 +50,12 @@
       <el-table
         v-else
         :data="filterData(itemList)"
+        :default-sort="{prop: 'name'}"
         :empty-text="messages.empty_list"
         style="width: 100%"
       >
         <el-table-column min-width="200"
+        sortable
         :label="capitalizeFirstLetter(this.itemType)"
          prop="name"
         >
