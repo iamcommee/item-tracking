@@ -1,3 +1,12 @@
+1.0.2
+---
+2021-01-02
+- Datatable: Make data table sortable by book/device names
+- Mode selector: Set primary color to only the current itemType to make it more clear which one is active.
+- Layout: Use 22 columns for xs layout instead of 3 to add some spaces on the left and right.
+- Borrow dialog: display item name in the dialog header, remove id and name fields.
+- (Refactor) Create filters to transform strings. Rename capitalizeFirstLetter to just capitalize because capitalize is already = just the first letter.
+
 1.0.1
 ---
 2021-01-26
