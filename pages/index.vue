@@ -26,7 +26,7 @@
       </div>
 
       <!-- Start form to add item in Admin -->
-      <div v-if="this.$route.query.role === 'admin'" style="margin: 50px 0px 50px 0px">
+      <div v-if="isAdmin" style="margin: 50px 0px 50px 0px">
         <el-form @submit.native.prevent>
         <el-input
           placeholder="Please input a item to the list..."
@@ -76,7 +76,7 @@
         <el-table-column align="center" label="Action">
           <template slot-scope="scope">
             <!-- Start Admin Permission -->
-            <div v-if="$route.query.role === 'admin'">
+            <div v-if="isAdmin">
               <el-button
               round
               size="mini"
@@ -184,6 +184,9 @@ export default {
     isValidatedForm() {
       return this.itemData != '';
     },
+    isAdmin() {
+      return this.$route.query.role === 'admin'
+    }
   },
 
   async fetch() {
