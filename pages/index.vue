@@ -26,7 +26,7 @@
       </div>
 
       <!-- Start form to add item in Admin -->
-      <div v-if="this.$route.query.role === 'admin'" style="margin: 50px 0px 50px 0px">
+      <div v-if="isAdmin" style="margin: 50px 0px 50px 0px">
         <el-form @submit.native.prevent>
         <el-input
           placeholder="Please input a item to the list..."
@@ -59,6 +59,14 @@
         :label="this.itemType | capitalize"
          prop="name"
         >
+          <template slot-scope="scope">
+            <div>{{ scope.row.name }}</div>
+            <ul v-if="scope.row.tags" class="tags-list">
+              <li v-for="tag in scope.row.tags" :key="tag.id" class="tag-item">
+                #{{ tag }}
+              </li>
+            </ul>
+          </template>
         </el-table-column>
         <el-table-column label="Availability" align="center">
           <template slot-scope="scope">
@@ -73,10 +81,14 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="Action">
+        <el-table-column align="center" label="Actions">
           <template slot-scope="scope">
             <!-- Start Admin Permission -->
-            <div v-if="$route.query.role === 'admin'">
+            <div v-if="isAdmin">
+              <el-button round size="mini"
+                @click="openEditDialog(scope.row)">
+                Edit
+              </el-button>
               <el-button
               round
               size="mini"
@@ -144,6 +156,25 @@
         </span>
       </el-dialog>
 
+      <el-dialog title="Edit item"
+        :visible.sync="showEditDialog">
+        <el-form :model="selectedItem" label-position="top">
+          <el-form-item label="Name">
+            <el-input v-model="selectedItem.name"></el-input>
+          </el-form-item>
+          <el-form-item label="Tags (comma-separated)">
+            <el-input v-model="selectedItem.tags"></el-input>
+          </el-form-item>
+          <el-form-item label="Borrower">
+            <el-input v-model="selectedItem.borrower"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer">
+          <el-button @click="showEditDialog = false">Cancel</el-button>
+          <el-button type="primary" @click="updateItem(selectedItem)">Save</el-button>
+        </div>
+      </el-dialog>
+
     </el-col>
   </el-row>
 </template>
@@ -172,6 +203,14 @@ export default {
         item: "",
         type: "",
       },
+      showEditDialog: false,
+      selectedItem: {
+        id: "",
+        borrower: "",
+        item: "",
+        type: "",
+        tags: ""
+      }
     };
   },
 
@@ -184,6 +223,9 @@ export default {
     isValidatedForm() {
       return this.itemData != '';
     },
+    isAdmin() {
+      return this.$route.query.role === 'admin'
+    }
   },
 
   async fetch() {
@@ -309,11 +351,54 @@ export default {
       this.$fetch();
     },
 
+    async updateItem(data) {
+      const item =  {
+        name: data.name,
+        tags: data.tags.split(',').map(tag => tag.trim())
+      };
+
+      if (data.borrower) {
+        item.borrower = data.borrower;
+      }
+
+      try {
+        await this.$fireDb.ref(`items/${this.itemType}/${data.id}`).update(item);
+        this.showEditDialog = false;
+        this.$message({
+          type: 'success',
+          message: 'The item has been updated.',
+          duration: 5000
+        });
+
+      } catch (e) {
+        this.$message({
+          type: 'danger',
+          message: 'The item has been not updated.',
+          duration: 5000
+        });
+        console.error(e);
+        return;
+      }
+      this.$fetch();
+    },
+
     openBorrowDialog(data) {
       this.borrowInformationForm.id = data.id;
       this.borrowInformationForm.name = data.name;
       this.borrowInformationForm.type = '';
       this.showBorrowInformationDialog = true;
+    },
+
+    openEditDialog(item) {
+      const tags = item.tags || [];
+      this.selectedItem = {
+        id: item.id,
+        name: item.name,
+        type: item.type,
+        tags: tags.join(', '),
+        borrower: item.borrower
+      }
+      this.showEditDialog = true;
     },
 
     setAutoFocus() {
@@ -373,6 +458,23 @@ export default {
 .el-dialog__body {
   padding-top: 20px;
   padding-bottom: 0;
+}
+
+.tags-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.tag-item {
+  flex-basis: auto;
+  color: #b9b9d9;
+  font-size: 0.9em;
+}
+
+.tag-item:not(:last-child) {
+  margin-right: 0.5em;
 }
 
 </style>
