@@ -1,6 +1,12 @@
+1.1.0
+---
+2021-02-09
+- Added edit mode for admin
+- Added feature `tags` support
+
 1.0.2
 ---
-2021-01-02
+2021-02-02
 - Datatable: Make data table sortable by book/device names
 - Mode selector: Set primary color to only the current itemType to make it more clear which one is active.
 - Layout: Use 22 columns for xs layout instead of 3 to add some spaces on the left and right.
