@@ -178,7 +178,7 @@
 
       <el-dialog
         title="Item Information"
-        custom-class="borrow-information"
+        custom-class="item-information"
         :visible.sync="showItemInformationDialog"
         >
         <div slot="title" class="dialog-text">
@@ -477,6 +477,10 @@ export default {
   .borrow-information {
     width: 95%;
   }
+
+  .item-information {
+    width: 95%;
+  }
 }
 
 .dialog-text {
@@ -507,6 +511,10 @@ export default {
 
 .tag-item:not(:last-child) {
   margin-right: 0.5em;
+}
+
+.item-information {
+  text-align: center;
 }
 
 </style>
