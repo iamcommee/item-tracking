@@ -3,7 +3,7 @@
     <el-col :span="18" :xs="22">
       <div style="margin-top: 60px;">
           <img width="50" height="50" src="~/assets/icon.png" style="margin-top:-6px; margin-left:5px;"/>
-          <el-tooltip effect="dark" content="Device Tracking" placement="top">
+          <!-- <el-tooltip effect="dark" content="Device Tracking" placement="top">
             <el-button
             style="float: right;"
             :type="this.itemType === 'devices' ? 'primary' : ''"
@@ -22,7 +22,7 @@
             @click="getItemType('books')"
             >
             </el-button>
-          </el-tooltip>
+          </el-tooltip> -->
       </div>
 
       <!-- Start form to add item in Admin -->
@@ -53,6 +53,7 @@
         :default-sort="{prop: 'name'}"
         :empty-text="messages.empty_list"
         style="width: 100%"
+        @row-click="getItemInfoFromIsbn"
       >
         <el-table-column min-width="200"
         sortable
@@ -175,6 +176,21 @@
         </div>
       </el-dialog>
 
+      <el-dialog
+        title="Item Information"
+        custom-class="borrow-information"
+        :visible.sync="showItemInformationDialog"
+        >
+        <div slot="title" class="dialog-text">
+          <em>{{ itemInformation.title }}</em>.
+        </div>
+        <el-row :gutter="20">
+          <el-col :span="12" :offset="6">
+             <img :src="itemInformation.thumbnail_url">
+          </el-col>
+        </el-row>
+      </el-dialog>
+
     </el-col>
   </el-row>
 </template>
@@ -210,6 +226,12 @@ export default {
         item: "",
         type: "",
         tags: ""
+      },
+      showItemInformationDialog: false,
+      itemInformation: {
+        title: "",
+        thumbnail_url: "",
+        authors: ""
       }
     };
   },
@@ -236,6 +258,7 @@ export default {
       this.itemList = (getItemList.val())
       ? Object.values(getItemList.val())
       : [];
+      console.log(this.itemList);
     } catch (e) {
       console.log(e);
       return;
@@ -424,6 +447,15 @@ export default {
 
     async sendNotification() {
       // @TODO : Send request to clound function for security
+    },
+
+    async getItemInfoFromIsbn (row) {
+      if(row.isbn){
+        let res = await this.$axios.$get(`https://openlibrary.org/api/books?bibkeys=ISBN:${row.isbn}&jscmd=details&format=json`)
+        this.itemInformation.title = res[`ISBN:${row.isbn}`]['details']['title']
+        this.itemInformation.thumbnail_url = res[`ISBN:${row.isbn}`]['thumbnail_url'].replace('-S', '-M')
+        this.showItemInformationDialog = true;
+      }
     }
 
   },
