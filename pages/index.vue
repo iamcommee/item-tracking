@@ -186,7 +186,7 @@
         </div>
         <el-row :gutter="20">
           <el-col :span="12" :offset="6">
-             <img :src="itemInformation.thumbnail_url">
+             <img :src="itemInformation.thumbnail_url" class="item-thumbnail">
           </el-col>
         </el-row>
       </el-dialog>
@@ -453,8 +453,10 @@ export default {
       if(row.isbn){
         let res = await this.$axios.$get(`https://openlibrary.org/api/books?bibkeys=ISBN:${row.isbn}&jscmd=details&format=json`)
         this.itemInformation.title = res[`ISBN:${row.isbn}`]['details']['title']
-        this.itemInformation.thumbnail_url = res[`ISBN:${row.isbn}`]['thumbnail_url'].replace('-S', '-M')
+        this.itemInformation.thumbnail_url = res[`ISBN:${row.isbn}`]['thumbnail_url'].replace('-S', '-L')
         this.showItemInformationDialog = true;
+      } else {
+         this.$message.error('Oops, no isbn number.');
       }
     }
 
@@ -515,6 +517,10 @@ export default {
 
 .item-information {
   text-align: center;
+}
+
+.item-information .item-thumbnail {
+    width: 100%;
 }
 
 </style>
