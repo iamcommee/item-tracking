@@ -3,6 +3,7 @@
     <el-col :span="18" :xs="22">
       <div style="margin-top: 60px;">
           <img width="50" height="50" src="~/assets/icon.png" style="margin-top:-6px; margin-left:5px;"/>
+          <!-- @NOTE : Hide this section because now, we don't have another item to use -->
           <!-- <el-tooltip effect="dark" content="Device Tracking" placement="top">
             <el-button
             style="float: right;"
@@ -258,7 +259,6 @@ export default {
       this.itemList = (getItemList.val())
       ? Object.values(getItemList.val())
       : [];
-      console.log(this.itemList);
     } catch (e) {
       console.log(e);
       return;
@@ -476,11 +476,7 @@ export default {
 }
 
 @media only screen and (max-width: 768px) {
-  .borrow-information {
-    width: 95%;
-  }
-
-  .item-information {
+  .borrow-information, .item-information {
     width: 95%;
   }
 }
